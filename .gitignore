@@ -1,0 +1,22 @@
+# ignore everything at repository root by default
+/*
+
+# allow tracking of these important files/directories
+!/.gitignore
+!/.vscode/
+!/.vscode/extensions.json
+
+# explicit project directories we want committed
+!/image_rename/
+!/sitemap/
+# add further `!/foldername/` lines for any new toplevel folder you want tracked
+
+# patterns to ignore anywhere in the tree
+*.env
+*.csv
+*.log
+__pycache__/
+
+# other common top-level ignores
+/.venv
+/.github
