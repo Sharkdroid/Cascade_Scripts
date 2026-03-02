@@ -84,7 +84,7 @@ try:
                 root_node = page_asset["structuredData"]["structuredDataNodes"]
                 is_type_press_release = False
                 [
-                    is_type_press_release := field["text"] == 'press' 
+                    is_type_press_release := field["text"] == 'press' or field["text"] == 'faculty'
                     for node in root_node 
                     for field in node["structuredDataNodes"] 
                     if node["identifier"] == "post_details" and field["identifier"] == "postType"
