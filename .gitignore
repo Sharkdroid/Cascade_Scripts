@@ -10,6 +10,7 @@
 # explicit project directories we want committed
 !/image_rename/
 !/sitemap/
+!/press_release_no_nav/
 # add further `!/foldername/` lines for any new toplevel folder you want tracked
 
 # patterns to ignore anywhere in the tree
