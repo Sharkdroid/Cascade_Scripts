@@ -49,7 +49,7 @@ def strip_cascade_object(raw_response: Dict[str, Any], type_asset) -> Dict[str, 
 
 
 try:
-    log_file.write(f"Running sitemap_setter.py @{datetime.now()}\n")
+    log_file.write(f"Running renaming_script.py @{datetime.now()}\n")
     print("Program running. This may take a few minutes...")
     with requests.session() as session:
         with open(csv_path, 'r') as file:
@@ -58,11 +58,12 @@ try:
             for row in reader:
                 try:
                     # ignore header row
-                    if row == ['destination_path','newname']:
+                    if row == ['destination_path','newname', 'target_destination']:
                         continue
                     (
                         img_path,
-                        new_name
+                        new_name,
+                        target_path
                     ) = row
                     print(f"Getting {img_path} ")
 
@@ -104,7 +105,7 @@ try:
                         "moveParameters": {
                             "destinationContainerIdentifier": {
                             "path": {
-                                "path": parent_folder_path,
+                                "path": parent_folder_path if target_path == '' else target_path,
                                 "siteName": sitename
                             },
                             "type": "folder"
@@ -197,7 +198,7 @@ try:
                     log_file.write(f"***Network issue occurred***")
                 except ValueError:
                     problem_path = row[1]
-                    raise RuntimeWarning(f"Please fix the row {problem_path} it contains too many columns")
+                    raise RuntimeWarning(f"Please fix the row {problem_path} it contains too many or too few columns")
 except RuntimeWarning as e:
     print(f"RuntimeWarning: {str(e)}")
 finally:

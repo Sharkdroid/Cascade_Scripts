@@ -10,11 +10,12 @@ Make sure you follow the installation process [here](https://github.com/Sharkdro
 
 ### CSV format
 ```csv
-destination_path,newname
-xxxxxxxx/xxxxxxx/xxxxxx/xxxxxxxxxxxx.png,xxxxxxxxx
-xxxxxxx/xxxxx/xxxxxx/xxxxxxxxxxxxxx.png,xxxxxxxxx
-xxxxxxx/xxxxx/xxxxxx/xxxxxxxxxxxxxx.png,xxxxxxx
+destination_path,newname,target_destination
+xxxxxxxx/xxxxxxx/xxxxxx/xxxxxxxxxxxx.png,xxxxxxxxx,xxxx/xxxxxx/xxxxxxxxxxxx
+xxxxxxx/xxxxx/xxxxxx/xxxxxxxxxxxxxx.png,xxxxxxxxx,
+xxxxxxx/xxxxx/xxxxxx/xxxxxxxxxxxxxx.png,xxxxxxx,
 ```
+**note**: *the paths should ignore the root slash and `target_destination` can be ignored but the comma for that column needs to present*
 
 ### Format
 The CSV has to be in a specific format or else the program won't function properly. While viewing the csv file click `Align` at the bottom of the window, it should change to `Shrink` click it again this will remove any trailing whitespaces.
