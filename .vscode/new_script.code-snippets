@@ -1,0 +1,48 @@
+{
+	// Place your Cascade_Scripts workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	"init_script": {
+		"scope": "python",
+		"prefix": "init",
+		"body": [
+			"import json",
+			"import traceback",
+			"import requests",
+			"from typing import Dict, Any",
+			"from sys import exit",
+			"import configparser",
+			"from warnings import warn",
+			"from datetime import datetime",
+			"",
+			"#logging",
+			"log_file = open(f'./{datetime.now().isoformat()}.log', 'w', buffering=1)",
+			"config = configparser.ConfigParser()",
+			"config.read('config.ini')",
+			"",
+			"# fetch required configuration values with explicit error handling",
+			"try:",
+    		"\tapi_key = config.get(\"GLOBAL\", \"api_key\")",
+    		"\tplatform = config.get(\"GLOBAL\", \"platform\")",
+    		"\tsitename = config.get(\"$1\", \"cascade_site\")",
+    		"\tasset_type = config.get(\"$2\", \"$3\")",
+			"except (configparser.NoSectionError, configparser.NoOptionError) as err:",
+    		"\tprint(f\"Configuration error: {err}\")",
+    		"\texit(1)"
+		],
+		"description": "Insert init for scripts"
+	},
+	"new_config_entry":{
+		"scope": "ini",
+		"prefix": "new",
+		"body":[
+			"[${1:new_script}]",
+			"cascade_site=$2",
+			"asset_type=${3|page,folder,file|}"
+		],
+		"description": "New Configuration Entry"
+	}
+}
