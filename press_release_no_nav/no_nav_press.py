@@ -7,17 +7,6 @@ import configparser
 from warnings import warn
 from datetime import datetime
 
-"""
-TODO
-    1. configs
-        - path to parent folder of the posts
-        - content-type: page
-    2. read the parent folder
-    3. get children with the 'contentTypePath' of 'Path' only
-    4. traverse 'structuredData'
-
-
-"""
 #logging
 log_file = open(f'./{datetime.now().isoformat()}.log', 'w', buffering=1)
 
@@ -61,7 +50,6 @@ def rebuild_cascade_object(flatten_fields: Dict[str, Any], type_asset):
                     type_asset:flatten_fields
                 }
             }
-    
 
 try:
     log_file.write(f"Running no_nav_press.py @{datetime.now()}\n")
@@ -70,6 +58,10 @@ try:
         session.headers.update(header)
         base_folder_request = session.get(f"{base_url}/read/folder/{sitename}/{parent_folder_path}")
         data = base_folder_request.json()
+
+        if data.get('success') == False:
+            raise RuntimeError(data)
+
         all_pages = strip_cascade_object(data, "folder")["children"]
         log_file.write(f"List of pages in the {parent_folder_path}:\n")
         for page in all_pages:
@@ -78,6 +70,12 @@ try:
             log_file.write(f"|- Getting {page_path}\n")
             page_request = session.get(f"{base_url}/read/{asset_type}/{uuid}")
             data = page_request.json()
+
+            if data.get('success') == False:
+                log_file.write(f"     |- asset most likely not a page asset (skip)\n")
+                continue
+                
+
             page_asset = strip_cascade_object(data, asset_type)
             log_file.write("    |-- Checking if asset is a post\n")
             if page_asset["contentTypePath"] == "Post":
@@ -86,7 +84,8 @@ try:
                 [
                     is_type_press_release := field["text"] == 'press' or field["text"] == 'faculty'
                     for node in root_node 
-                    for field in node["structuredDataNodes"] 
+                    if node.get("structuredDataNodes") is not None
+                    for field in node["structuredDataNodes"]
                     if node["identifier"] == "post_details" and field["identifier"] == "postType"
                 ]
                 if not is_type_press_release:
@@ -100,6 +99,7 @@ try:
                             field["fieldValues"][0]["value"] = "No"
                 else:
                     log_file.write("Unable to get metadata and dynamicFields from above asset ^^^^\n")
+                
                 edit_request = session.post(f"{base_url}/edit/{asset_type}/{uuid}",json=rebuild_cascade_object(page_asset, asset_type))
                 edit_response = edit_request.json()
                 if edit_response["success"]:
@@ -114,5 +114,6 @@ except Exception as e:
     print(f"response:{data}")
     traceback.print_exc()
 finally:
+    log_file.write("************************************ PROGRAM EXIT ****************************************")
     log_file.close()
     print("Cleanup")
