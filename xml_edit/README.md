@@ -26,3 +26,6 @@ The script relies on configuration values from `config.ini`. Ensure the followin
   - `new_asset_path`: The path to the new asset to inject into the widget (e.g., "_widgets/recreation-center/ski-swap").
 
 Update these values in `config.ini` before running the script. The script will log its progress and any errors to a timestamped `.log` file.
+
+
+**additional resources**: *https://gist.github.com/Sharkdroid/d7fede2d171691da5a01f715d8783567*
