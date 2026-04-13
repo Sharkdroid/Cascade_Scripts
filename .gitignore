@@ -11,12 +11,16 @@
 !/image_rename/
 !/sitemap/
 !/press_release_no_nav/
+!/xml_edit/
 # add further `!/foldername/` lines for any new toplevel folder you want tracked
 
 # patterns to ignore anywhere in the tree
 *.env
 *.csv
 *.log
+*.txt
+*.json
+*.xml
 __pycache__/
 
 # other common top-level ignores
