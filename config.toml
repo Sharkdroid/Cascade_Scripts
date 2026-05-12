@@ -1,0 +1,31 @@
+[global]
+api_key = "bf8773ca-139f-409a-aeda-37e070500aa9"
+# Specify the which cascade you're using apptest or prod
+platform = "prod"
+
+[sitemap]
+cascade_site = "www.csi.edu"
+# path to a CSV file output from the index block
+csv_path = "./sitemap.csv"
+# specify target asset type folder, page, site, etc
+asset_type = "page"
+
+[image_rename]
+cascade_site = "www.csi.edu"
+root_folder_path = "_files/images"
+within_percent=20
+# resolution in [width]x[height] format
+target_dimensions="1920x400"
+new_folder_name="old impact images"
+
+[press_script]
+cascade_site = "www.csi.edu"
+post_folder_path = "dev-misc"
+file_types = "page"
+
+[xml_edit]
+cascade_site = "www.csi.edu"
+new_asset_path = "_widgets/recreation-center/ski-swap"
+target_page_path = "dev-misc/test"
+search_path = "page-content/right-column/widget"
+asset_type = "page"

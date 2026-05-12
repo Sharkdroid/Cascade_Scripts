@@ -1,2 +1,3 @@
 requests
-# jsonpath-ng
+pillow
+jsonpath-ng

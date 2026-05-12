@@ -1,27 +1,51 @@
-# Image Renaming Script
+# Image Impact Audit Script
 
 ### Description
-Rename images in a given site.<br>
-**program flow:**<br>
-rename the displayName (if applicable) &rarr; rename with move operation & unpublish &rarr; republish image asset &rarr; republish all related assets
+Scan image assets in the configured `root_folder_path` and report:
+- possible impact images within the configured size tolerance
+- images with `impact` in the filename that are outside tolerance
+- images related to pages with `display-impact == Yes` that are outside tolerance
+
+The script is `banner_puller.py` and it runs against the site configured under `image_rename.cascade_site`.
 
 ### Prequisites
-Make sure you follow the installation process [here](https://github.com/Sharkdroid/Cascade-Scripts) before continuing
+Make sure you follow the installation process [here](https://github.com/Sharkdroid/Cascade-Scripts) before continuing.
 
-### CSV format
-```csv
-destination_path,newname,target_destination
-xxxxxxxx/xxxxxxx/xxxxxx/xxxxxxxxxxxx.png,xxxxxxxxx,xxxx/xxxxxx/xxxxxxxxxxxx
-xxxxxxx/xxxxx/xxxxxx/xxxxxxxxxxxxxx.png,xxxxxxxxx,
-xxxxxxx/xxxxx/xxxxxx/xxxxxxxxxxxxxx.png,xxxxxxx,
+This script depends on the Python packages listed in `requirements.txt`, including `requests`, `Pillow`, and `jsonpath-ng`.
+
+### Usage
+Run from the `image_rename/` directory so the script can resolve its relative paths correctly:
+```bash
+python3 banner_puller.py
 ```
-**note**: *the paths should ignore the root slash and `target_destination` can be ignored but the comma for that column needs to present*
 
-### Format
-The CSV has to be in a specific format or else the program won't function properly. While viewing the csv file click `Align` at the bottom of the window, it should change to `Shrink` click it again this will remove any trailing whitespaces.
+### Configuration
+The `config.toml` file contains the `image_rename` section used by this script:
+- `cascade_site` — Cascade site name
+- `root_folder_path` — root image folder path to search
+- `within_percent` — size tolerance percentage for the target dimensions
+- `target_dimensions` — required image dimensions in `WIDTHxHEIGHT` format
+- `new_folder_name` — descriptive folder name for old impact images
 
-### Other notes
-The parent asset needs to be publishable or else the program won't work correctly.
+Example config values:
+```toml
+[image_rename]
+cascade_site = "www.csi.edu"
+root_folder_path = "_files/images"
+within_percent = 20
+target_dimensions = "1920x400"
+new_folder_name = "old impact images"
+```
+
+### Log output
+The script writes these files into the current folder:
+- `<timestamp>.log`
+- `<timestamp>.possible-impact-images.log`
+- `<timestamp>.in-use-impact-wrong-size.log`
+- `<timestamp>.impact-name-wrong-size.log`
+
+### Notes
+This script inspects image assets and reports candidates; it does not rename or move files.
 
 ##### Related Scripts
 |scripts| description |

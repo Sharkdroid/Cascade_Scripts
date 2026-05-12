@@ -5,7 +5,7 @@
 !/.gitignore
 !/.vscode/
 !/.vscode/extensions.json
-!/config.ini
+!/config.toml
 
 # explicit project directories we want committed
 !/image_rename/
