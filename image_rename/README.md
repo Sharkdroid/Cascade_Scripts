@@ -3,7 +3,7 @@
 ### Description
 Scan image assets in the configured `root_folder_path` and report:
 - possible impact images within the configured size tolerance
-- images with `impact` in the filename that are outside tolerance
+- images with `impact` in the filename that are outside tolerance (excludes paths beginning with `_files/images/homepage/`)
 - images related to pages with `display-impact == Yes` that are outside tolerance
 
 The script is `banner_puller.py` and it runs against the site configured under `image_rename.cascade_site`.

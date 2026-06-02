@@ -22,7 +22,8 @@ possible_impact_log = open(f"./{LOG_PREFIX}.possible-impact-images.log", "w", bu
 in_use_impact_wrong_size_log = open(f"./{LOG_PREFIX}.in-use-impact-wrong-size.log", "w", buffering=1)
 impact_filename_wrong_size_log = open(f"./{LOG_PREFIX}.impact-name-wrong-size.log", "w", buffering=1)
 
-DISPLAY_IMPACT_JSONPATH = parse("$..structuredDataNodes[?(@.identifier=='display-impact' & @.text=='Yes')]")
+IMPACT_GROUP_JSONPATH = parse("$..structuredDataNodes[?(@.identifier=='impact')]")
+IMPACT_IMG_JSONPATH = parse("$[?(@.identifier=='img')]")
  
 # Goal: detect every image with exactly that pixel size that exists in _files/images, move it to a dedicated folder for "old impact images" (real name tbd), then republish those images and all pages that use them.
  
@@ -166,8 +167,21 @@ def fetch_related_page_assets(session: requests.Session, page_ids: List[str]) ->
     return pages
 
 
-def page_has_display_impact(page_asset: Dict[str, Any]) -> bool:
-    return bool(DISPLAY_IMPACT_JSONPATH.find(page_asset))
+def get_impact_img_paths(page_asset: Dict[str, Any]) -> List[str]:
+    paths: List[str] = []
+    for group_match in IMPACT_GROUP_JSONPATH.find(page_asset):
+        group_nodes = group_match.value.get("structuredDataNodes", [])
+        has_display_impact = any(
+            n.get("identifier") == "display-impact" and n.get("text") == "Yes"
+            for n in group_nodes
+        )
+        if not has_display_impact:
+            continue
+        for img_match in IMPACT_IMG_JSONPATH.find(group_nodes):
+            file_path = img_match.value.get("filePath")
+            if file_path:
+                paths.append(file_path)
+    return paths
 
 
 def log_dims(s: requests.Session, l: List[Dict[str, Any]]):
@@ -217,7 +231,7 @@ def log_dims(s: requests.Session, l: List[Dict[str, Any]]):
             log_file.write(f"FAILURE: {asset_name} is outside the configured tolerance\n")
 
         if "impact" in asset_path.lower() or "impact" in asset_name.lower():
-            if not within_tolerance:
+            if not within_tolerance and not asset_path.startswith("_files/images/homepage/"):
                 impact_filename_wrong_size_log.write(f"{asset_name}\t{asset_path}\t{img_info.size}\n")
                 log_file.write(f"SUCCESS: logged {asset_name} to impact filename wrong size log\n")
             else:
@@ -228,12 +242,23 @@ def log_dims(s: requests.Session, l: List[Dict[str, Any]]):
             log_file.write(f"SUCCESS: found {len(related_page_ids)} related page relationship(s) for {asset_name}\n")
             related_pages = fetch_related_page_assets(s, related_page_ids)
             if related_pages:
-                if any(page_has_display_impact(page) for page in related_pages):
+                impact_file_paths: List[str] = []
+                for page in related_pages:
+                    impact_file_paths.extend(get_impact_img_paths(page))
+
+                if asset_path in impact_file_paths:
                     if not within_tolerance:
-                        in_use_impact_wrong_size_log.write(f"{asset_name}\t{asset_path}\t{img_info.size}\trelated_pages={','.join(related_page_ids)}\n")
+                        paths_str = ",".join(impact_file_paths)
+                        in_use_impact_wrong_size_log.write(
+                            f"{asset_name}\t{asset_path}\t{img_info.size}\t"
+                            f"related_pages={','.join(related_page_ids)}\t"
+                            f"impact_img_paths={paths_str}\n"
+                        )
                         log_file.write(f"SUCCESS: logged {asset_name} to in-use impact wrong size log\n")
                     else:
                         log_file.write(f"INFO: {asset_name} is related to an impact page and is within tolerance\n")
+                elif impact_file_paths:
+                    log_file.write(f"INFO: {asset_name} is not the impact image on its related page(s)\n")
                 else:
                     log_file.write(f"INFO: related pages for {asset_name} do not contain display-impact=Yes\n")
             else:

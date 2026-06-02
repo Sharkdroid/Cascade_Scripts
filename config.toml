@@ -1,5 +1,5 @@
 [global]
-api_key = "bf8773ca-139f-409a-aeda-37e070500aa9"
+api_key = "..."
 # Specify the which cascade you're using apptest or prod
 platform = "prod"
 
