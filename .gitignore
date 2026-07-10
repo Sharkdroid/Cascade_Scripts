@@ -12,7 +12,7 @@
 !/sitemap/
 !/press_release_no_nav/
 !/xml_edit/
-!/program_update/
+!/programs_creation/
 # add further `!/foldername/` lines for any new toplevel folder you want tracked
 
 # patterns to ignore anywhere in the tree
