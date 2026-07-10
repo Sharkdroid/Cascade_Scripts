@@ -1,7 +1,7 @@
 [global]
 api_key = "..."
 # Specify the which cascade you're using apptest or prod
-platform = "prod"
+platform = "apptest"
 
 [sitemap]
 cascade_site = "www.csi.edu"
@@ -29,3 +29,10 @@ new_asset_path = "_widgets/recreation-center/ski-swap"
 target_page_path = "dev-misc/test"
 search_path = "page-content/right-column/widget"
 asset_type = "page"
+
+[program_update]
+# path to a CSV file with columns: [folder name, display name/title]
+rename_csv_path = "./program_update/programs_rename.csv"
+# parent folder path to create the new program folders under
+root_folder_path = "programs3"
+sitename = "wwwdev.csi.edu"
