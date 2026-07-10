@@ -3,7 +3,7 @@
 ### Description
 Bulk-creates "Program Folder" folder assets in Cascade from a CSV file. For each row, the script fills in `folder_template.json` with the folder's name, display name/title, site name, and parent folder path, then POSTs the result to Cascade's `/create` endpoint.
 
-The script is `create_folders.py` and it creates folders under the site configured in `program_creation.sitename`.
+The script is `create_folders.py` and it creates folders under the site configured in `programs_creation.sitename`.
 
 ### Prequisites
 Make sure you follow the installation process [here](https://github.com/Sharkdroid/Cascade-Scripts) before continuing.
@@ -11,21 +11,21 @@ Make sure you follow the installation process [here](https://github.com/Sharkdro
 ### Usage
 Run from the root directory so the script can resolve its relative paths correctly:
 ```bash
-python3 program_creation/create_folders.py
+python3 programs_creation/create_folders.py
 ```
 
 ### Configuration
-The `config.toml` file contains the `program_creation` section used by this script:
+The `config.toml` file contains the `programs_creation` section used by this script:
 - `rename_csv_path` — path to the CSV file of folders to create
 - `root_folder_path` — parent folder path the new folders are created under
 - `sitename` — Cascade site name
 
 Example config values:
 ```toml
-[program_creation]
-rename_csv_path = "./programs_creation/<filename>.csv"
-root_folder_path = "programs"
-sitename = "www.csi.edu"
+[programs_creation]
+rename_csv_path = "./programs_creation/programs_rename.csv"
+root_folder_path = "programs3"
+sitename = "wwwdev.csi.edu"
 ```
 
 ### CSV format
